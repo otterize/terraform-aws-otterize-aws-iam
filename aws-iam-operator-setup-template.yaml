@@ -91,6 +91,8 @@ Resources:
               - "organizations:ListRoots"
               - "organizations:ListPolicies"
               - "organizations:ListTargetsForPolicy"
+              - "ec2:DescribeInstances"
+              - "eks:DescribeCluster"
             Resource: "*"
 
   CredentialsOperatorPolicy:
@@ -114,6 +116,8 @@ Resources:
               - "organizations:ListRoots"
               - "organizations:ListPolicies"
               - "organizations:ListTargetsForPolicy"
+              - "ec2:DescribeInstances"
+              - "eks:DescribeCluster"
             Resource: "*"
 
   ClusterOIDCURL:
