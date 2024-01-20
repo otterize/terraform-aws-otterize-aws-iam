@@ -42,6 +42,11 @@ Resources:
         }
       Path: "/"
       RoleName: !Sub "${EKSClusterName}-otterize-intents-operator"
+      Tags:
+        - Key: "otterize/system"
+          Value: "true"
+        - Key: "otterize/clusterName"
+          Value: !Sub "${EKSClusterName}"
 
   CredentialsOperatorServiceAccountRole:
     Type: AWS::IAM::Role
@@ -69,6 +74,11 @@ Resources:
         }
       Path: "/"
       RoleName: !Sub "${EKSClusterName}-otterize-credentials-operator"
+      Tags:
+        - Key: "otterize/system"
+          Value: "true"
+        - Key: "otterize/clusterName"
+          Value: !Sub "${EKSClusterName}"
 
   IntentsOperatorPolicy:
     Type: AWS::IAM::Policy
@@ -80,33 +90,51 @@ Resources:
         Statement:
           - Effect: Allow
             Action:
-              - "iam:GetRole"
-              - "iam:CreateRole"
-              - "iam:TagRole"
-              - "iam:ListAttachedRolePolicies"
-              - "iam:DeleteRole"
               - "iam:GetPolicy"
+              - "iam:GetRole"
+              - "iam:ListAttachedRolePolicies"
               - "iam:ListEntitiesForPolicy"
-              - "iam:DetachRolePolicy"
               - "iam:ListPolicyVersions"
+            Resource: "*"
+          - Effect: Deny
+            Action:
+              - "iam:*"
+            Resource:
+              - !Sub "arn:aws:iam::${AWS::AccountId}:role/${EKSClusterName}-otterize-intents-operator"
+              - !Sub "arn:aws:iam::${AWS::AccountId}:role/${EKSClusterName}-otterize-credentials-operator"
+              - !Sub "arn:aws:iam::${AWS::AccountId}:policy/${EKSClusterName}-limit-iam-permission-boundary"
+          - Effect: Deny
+            Action:
+              - "iam:CreatePolicyVersion"
               - "iam:DeletePolicyVersion"
-              - "iam:DeletePolicy"
-              - "iam:PutRolePolicy"
+              - "iam:DetachRolePolicy"
+              - "iam:SetDefaultPolicyVersion"
+            Resource: !Sub "arn:aws:iam::${AWS::AccountId}:policy/${EKSClusterName}-limit-iam-permission-boundary"
+          - Effect: Deny
+            Action:
+              - "iam:DeleteRolePermissionsBoundary"
+            Resource: "*"
+          - Effect: Allow
+            Action:
+              - "iam:AttachRolePolicy"
               - "iam:CreatePolicy"
               - "iam:CreatePolicyVersion"
-              - "iam:AttachRolePolicy"
+              - "iam:DeletePolicy"
+              - "iam:DeletePolicyVersion"
+              - "iam:TagPolicy"
+              - "iam:DetachRolePolicy"
+              - "ec2:DescribeInstances"
+              - "eks:DescribeCluster"
               - "organizations:DescribeAccount"
               - "organizations:DescribeOrganization"
               - "organizations:DescribeOrganizationalUnit"
               - "organizations:DescribePolicy"
               - "organizations:ListChildren"
               - "organizations:ListParents"
+              - "organizations:ListPolicies"
               - "organizations:ListPoliciesForTarget"
               - "organizations:ListRoots"
-              - "organizations:ListPolicies"
               - "organizations:ListTargetsForPolicy"
-              - "ec2:DescribeInstances"
-              - "eks:DescribeCluster"
             Resource: "*"
 
   CredentialsOperatorPolicy:
@@ -119,33 +147,64 @@ Resources:
         Statement:
           - Effect: Allow
             Action:
-              - "iam:GetRole"
-              - "iam:CreateRole"
-              - "iam:TagRole"
-              - "iam:ListAttachedRolePolicies"
-              - "iam:DeleteRole"
               - "iam:GetPolicy"
+              - "iam:GetRole"
+              - "iam:ListAttachedRolePolicies"
               - "iam:ListEntitiesForPolicy"
-              - "iam:DetachRolePolicy"
               - "iam:ListPolicyVersions"
-              - "iam:DeletePolicyVersion"
+            Resource: "*"
+          - Effect: Deny
+            Action:
+              - "iam:*"
+            Resource:
+              - !Sub "arn:aws:iam::${AWS::AccountId}:role/${EKSClusterName}-otterize-intents-operator"
+              - !Sub "arn:aws:iam::${AWS::AccountId}:role/${EKSClusterName}-otterize-credentials-operator"
+              - !Sub "arn:aws:iam::${AWS::AccountId}:policy/${EKSClusterName}-limit-iam-permission-boundary"
+          - Effect: Allow
+            Action:
+              - "iam:CreateRole"
+            Resource:
+              - "*"
+            Condition:
+              StringEquals:
+                "iam:PermissionsBoundary": !Sub "arn:aws:iam::${AWS::AccountId}:policy/${EKSClusterName}-limit-iam-permission-boundary"
+          - Effect: Allow
+            Action:
               - "iam:DeletePolicy"
-              - "iam:PutRolePolicy"
-              - "iam:CreatePolicy"
-              - "iam:CreatePolicyVersion"
-              - "iam:AttachRolePolicy"
+              - "iam:DeletePolicyVersion"
+              - "iam:DeleteRole"
+              - "iam:DetachRolePolicy"
+              - "iam:TagRole"
+            Resource: "*"
+          - Effect: Deny
+            Action:
+              - "iam:DeleteRolePermissionsBoundary"
+            Resource: "*"
+          - Effect: Allow
+            Action:
+              - "ec2:DescribeInstances"
+              - "eks:DescribeCluster"
               - "organizations:DescribeAccount"
               - "organizations:DescribeOrganization"
               - "organizations:DescribeOrganizationalUnit"
               - "organizations:DescribePolicy"
               - "organizations:ListChildren"
               - "organizations:ListParents"
+              - "organizations:ListPolicies"
               - "organizations:ListPoliciesForTarget"
               - "organizations:ListRoots"
-              - "organizations:ListPolicies"
               - "organizations:ListTargetsForPolicy"
-              - "ec2:DescribeInstances"
-              - "eks:DescribeCluster"
+            Resource: "*"
+
+  LimitIAMPermissionBoundaryPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: !Sub "${EKSClusterName}-limit-iam-permission-boundary"
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Deny
+            Action: "iam:*"
             Resource: "*"
 
   ClusterOIDCURL:
@@ -255,7 +314,6 @@ Resources:
     Properties:
       Path: /
       AssumeRolePolicyDocument:
-        Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Principal:
@@ -266,22 +324,21 @@ Resources:
       Policies:
         - PolicyName: oidc-provider-management
           PolicyDocument:
-            Version: "2012-10-17"
             Statement:
-            - Effect: Allow
-              Action:
-              - eks:DescribeCluster
-              Resource: !Sub "arn:aws:eks:${AWS::Region}:${AWS::AccountId}:cluster/${EKSClusterName}"
-            - Effect: Allow
-              Action:
-              - iam:*OpenIDConnectProvider*
-              Resource: "*"
-            - Effect: Allow
-              Action:
-              - logs:CreateLogGroup
-              - logs:CreateLogStream
-              - logs:PutLogEvents
-              Resource: "*"
+              - Effect: Allow
+                Action:
+                  - eks:DescribeCluster
+                Resource: !Sub "arn:aws:eks:${AWS::Region}:${AWS::AccountId}:cluster/${EKSClusterName}"
+              - Effect: Allow
+                Action:
+                  - iam:*OpenIDConnectProvider*
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "*"
 
 Outputs:
   ClusterOIDCURL:
