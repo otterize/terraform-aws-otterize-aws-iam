@@ -206,6 +206,9 @@ Resources:
           - Effect: Deny
             Action: "iam:*"
             Resource: "*"
+          - Effect: Allow
+            Action: "*"
+            Resource: "*"
 
   ClusterOIDCURL:
     Type: Custom::ClusterOIDCURL
