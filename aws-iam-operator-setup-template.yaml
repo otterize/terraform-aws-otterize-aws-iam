@@ -125,16 +125,6 @@ Resources:
               - "iam:DetachRolePolicy"
               - "ec2:DescribeInstances"
               - "eks:DescribeCluster"
-              - "organizations:DescribeAccount"
-              - "organizations:DescribeOrganization"
-              - "organizations:DescribeOrganizationalUnit"
-              - "organizations:DescribePolicy"
-              - "organizations:ListChildren"
-              - "organizations:ListParents"
-              - "organizations:ListPolicies"
-              - "organizations:ListPoliciesForTarget"
-              - "organizations:ListRoots"
-              - "organizations:ListTargetsForPolicy"
             Resource: "*"
 
   CredentialsOperatorPolicy:
@@ -184,16 +174,6 @@ Resources:
             Action:
               - "ec2:DescribeInstances"
               - "eks:DescribeCluster"
-              - "organizations:DescribeAccount"
-              - "organizations:DescribeOrganization"
-              - "organizations:DescribeOrganizationalUnit"
-              - "organizations:DescribePolicy"
-              - "organizations:ListChildren"
-              - "organizations:ListParents"
-              - "organizations:ListPolicies"
-              - "organizations:ListPoliciesForTarget"
-              - "organizations:ListRoots"
-              - "organizations:ListTargetsForPolicy"
             Resource: "*"
 
   LimitIAMPermissionBoundaryPolicy:
