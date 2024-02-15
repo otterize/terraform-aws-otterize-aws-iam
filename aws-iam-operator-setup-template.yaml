@@ -200,7 +200,7 @@ Resources:
   ClusterOIDCURLFunction:
     Type: AWS::Lambda::Function
     Properties:
-      Runtime: python3.7
+      Runtime: python3.12
       Handler: index.lambda_handler
       MemorySize: 128
       Role: !GetAtt ClusterOIDCLambdaExecutionRole.Arn
