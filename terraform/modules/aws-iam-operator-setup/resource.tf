@@ -109,6 +109,7 @@ resource "aws_iam_policy" "intents_operator_policy" {
             "iam:DeletePolicy",
             "iam:DeletePolicyVersion",
             "iam:TagPolicy",
+            "iam:UntagPolicy",
             "iam:DetachRolePolicy",
             "ec2:DescribeInstances",
             "eks:DescribeCluster"
@@ -171,7 +172,10 @@ resource "aws_iam_policy" "credentials_operator_policy" {
             "iam:DeletePolicyVersion",
             "iam:DeleteRole",
             "iam:DetachRolePolicy",
-            "iam:TagRole"
+            "iam:TagRole",
+            "iam:TagPolicy",
+            "iam:UntagRole",
+            "iam:UntagPolicy",
           ]
           Resource = "*"
         },

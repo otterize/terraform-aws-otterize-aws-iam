@@ -122,6 +122,7 @@ Resources:
               - "iam:DeletePolicy"
               - "iam:DeletePolicyVersion"
               - "iam:TagPolicy"
+              - "iam:UntagPolicy"
               - "iam:DetachRolePolicy"
               - "ec2:DescribeInstances"
               - "eks:DescribeCluster"
@@ -165,6 +166,9 @@ Resources:
               - "iam:DeleteRole"
               - "iam:DetachRolePolicy"
               - "iam:TagRole"
+              - "iam:TagPolicy"
+              - "iam:UntagRole"
+              - "iam:UntagPolicy"
             Resource: "*"
           - Effect: Deny
             Action:
