@@ -1,8 +1,4 @@
-output "existing-oidc-provider-url" {
-  value = data.aws_iam_openid_connect_provider.cluster_oidc.url
-}
-
-output "new-oidc-provider-url" {
+output "oidc-provider-url" {
   value = data.aws_iam_openid_connect_provider.cluster_oidc.url
 }
 
