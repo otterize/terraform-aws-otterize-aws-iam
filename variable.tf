@@ -1,10 +1,12 @@
-variable eks_cluster_name {
+variable "eks_cluster_name" {
   description = "EKS cluster name"
-  type = string
+  type        = string
+  default     = "otterize-iam-eks-tutorial"
 }
 
-variable otterize_deploy_namespace {
+variable "otterize_deploy_namespace" {
   description = "The namespace Otterize is deployed in."
-  type = string
+  type        = string
+  default     = "otterize-system"
 }
 
