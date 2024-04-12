@@ -62,11 +62,21 @@ resource "aws_iam_policy" "intents_operator_policy" {
         {
           Effect = "Allow"
           Action = [
+            "ec2:DescribeInstances",
+            "eks:DescribeCluster",
+            "iam:AttachRolePolicy",
+            "iam:CreatePolicy",
+            "iam:CreatePolicyVersion",
+            "iam:DeletePolicy",
+            "iam:DeletePolicyVersion",
+            "iam:DetachRolePolicy",
             "iam:GetPolicy",
             "iam:GetRole",
             "iam:ListAttachedRolePolicies",
             "iam:ListEntitiesForPolicy",
-            "iam:ListPolicyVersions"
+            "iam:ListPolicyVersions",
+            "iam:TagPolicy",
+            "iam:UntagPolicy"
           ]
           Resource = "*"
         },
@@ -84,16 +94,6 @@ resource "aws_iam_policy" "intents_operator_policy" {
         {
           Effect = "Deny"
           Action = [
-            "iam:CreatePolicyVersion",
-            "iam:DeletePolicyVersion",
-            "iam:DetachRolePolicy",
-            "iam:SetDefaultPolicyVersion"
-          ]
-          Resource = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/${var.eks_cluster_name}-limit-iam-permission-boundary"
-        },
-        {
-          Effect = "Deny"
-          Action = [
             "iam:DeleteRolePermissionsBoundary"
           ]
           Resource = "*"
@@ -101,16 +101,7 @@ resource "aws_iam_policy" "intents_operator_policy" {
         {
           Effect = "Allow"
           Action = [
-            "iam:AttachRolePolicy",
-            "iam:CreatePolicy",
-            "iam:CreatePolicyVersion",
-            "iam:DeletePolicy",
-            "iam:DeletePolicyVersion",
-            "iam:TagPolicy",
-            "iam:UntagPolicy",
-            "iam:DetachRolePolicy",
-            "ec2:DescribeInstances",
-            "eks:DescribeCluster"
+
           ]
           Resource = "*"
         }
