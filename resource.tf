@@ -97,13 +97,6 @@ resource "aws_iam_policy" "intents_operator_policy" {
             "iam:DeleteRolePermissionsBoundary"
           ]
           Resource = "*"
-        },
-        {
-          Effect = "Allow"
-          Action = [
-
-          ]
-          Resource = "*"
         }
       ]
   })
@@ -121,24 +114,23 @@ resource "aws_iam_policy" "credentials_operator_policy" {
         {
           Effect = "Allow"
           Action = [
+            "ec2:DescribeInstances",
+            "eks:DescribeCluster",
+            "iam:DeletePolicy",
+            "iam:DeletePolicyVersion",
+            "iam:DeleteRole",
+            "iam:DetachRolePolicy",
             "iam:GetPolicy",
             "iam:GetRole",
             "iam:ListAttachedRolePolicies",
             "iam:ListEntitiesForPolicy",
-            "iam:ListPolicyVersions"
+            "iam:ListPolicyVersions",
+            "iam:TagPolicy",
+            "iam:TagRole",
+            "iam:UntagPolicy",
+            "iam:UntagRole"
           ]
           Resource = "*"
-        },
-        {
-          Effect = "Deny"
-          Action = [
-            "iam:*"
-          ]
-          Resource = [
-            "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.eks_cluster_name}-otterize-intents-operator",
-            "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.eks_cluster_name}-otterize-credentials-operator",
-            "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/${var.eks_cluster_name}-limit-iam-permission-boundary"
-          ]
         },
         {
           Effect = "Allow"
@@ -155,31 +147,20 @@ resource "aws_iam_policy" "credentials_operator_policy" {
           }
         },
         {
-          Effect = "Allow"
+          Effect = "Deny"
           Action = [
-            "iam:DeletePolicy",
-            "iam:DeletePolicyVersion",
-            "iam:DeleteRole",
-            "iam:DetachRolePolicy",
-            "iam:TagRole",
-            "iam:TagPolicy",
-            "iam:UntagRole",
-            "iam:UntagPolicy",
+            "iam:*"
           ]
-          Resource = "*"
+          Resource = [
+            "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.eks_cluster_name}-otterize-intents-operator",
+            "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.eks_cluster_name}-otterize-credentials-operator",
+            "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/${var.eks_cluster_name}-limit-iam-permission-boundary"
+          ]
         },
         {
           Effect = "Deny"
           Action = [
             "iam:DeleteRolePermissionsBoundary"
-          ]
-          Resource = "*"
-        },
-        {
-          Effect = "Allow"
-          Action = [
-            "ec2:DescribeInstances",
-            "eks:DescribeCluster"
           ]
           Resource = "*"
         }
