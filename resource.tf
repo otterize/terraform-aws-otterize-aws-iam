@@ -128,7 +128,8 @@ resource "aws_iam_policy" "credentials_operator_policy" {
             "iam:TagPolicy",
             "iam:TagRole",
             "iam:UntagPolicy",
-            "iam:UntagRole"
+            "iam:UntagRole",
+            "iam:UpdateAssumeRolePolicy"
           ]
           Resource = "*"
         },
